@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Site en construction</title>
+  <style>
+    body { font-family: Arial; text-align: center; padding: 50px; background: #f4f4f4; }
+    h1 { color: #333; }
+    #backend-status { margin-top: 20px; font-size: 18px; color: #555; }
+  </style>
+</head>
+<body>
+  <h1>🚧 Site en construction 🚧</h1>
+  <p>Test de communication Front ↔ Back :</p>
+  <div id="backend-status">Vérification du backend...</div>
+
+  <script>
+    const backendUrl = "/api/test";
+
+    fetch(backendUrl)
+      .then(response => {
+        if (!response.ok) throw new Error("Erreur HTTP " + response.status);
+        return response.json();
+      })
+      .then(data => {
+        document.getElementById("backend-status").textContent =
+          "Backend répond : " + JSON.stringify(data);
+      })
+      .catch(error => {
+        document.getElementById("backend-status").textContent =
+          "Impossible de joindre le backend : " + error;
+      });
+  </script>
+</body>
+</html>

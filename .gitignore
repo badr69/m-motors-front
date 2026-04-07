@@ -1,0 +1,18 @@
+# Fichiers de logs
+*.log
+
+# Fichiers temporaires du système
+.DS_Store
+Thumbs.db
+
+# IDE / éditeurs
+.idea/
+.vscode/
+
+# Environnements / dépendances (si jamais tu en ajoutes plus tard)
+node_modules/
+dist/
+build/
+
+# Fichiers de configuration locaux
+#.env
