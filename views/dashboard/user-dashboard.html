@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard - M-Motors</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+
+<body>
+
+    <!-- Navbar injectée par JS -->
+    <div id="navbar"></div>
+
+    <!-- Dashboard User -->
+    <div class="d-flex">
+
+        <!-- Sidebar -->
+        <aside id="sidebar"
+               class="d-flex flex-column p-3"
+               style="min-width: 250px; background-color: #1c1c1c; height: 100vh;">
+
+            <!-- User info -->
+            <div class="mb-4 text-white">
+                <strong id="current-user-name">Utilisateur</strong>
+
+                <button id="logout-button"
+                        class="btn btn-danger w-100 mt-2">
+                    Logout
+                </button>
+            </div>
+
+            <!-- User links -->
+            <div class="links d-flex flex-column gap-2">
+
+                <a href="/my-cars.html" class="btn btn-dark">
+                    Mes véhicules
+                </a>
+
+                <a href="/my-dossiers.html" class="btn btn-dark">
+                    Mes dossiers
+                </a>
+
+                <a href="/create-dossier.html" class="btn btn-dark">
+                    Nouvelle demande
+                </a>
+
+            </div>
+
+        </aside>
+
+        <!-- Main content -->
+        <main class="flex-fill p-4">
+
+            <h1>Bienvenue sur votre espace client</h1>
+
+            <p>
+                Ici vous pouvez suivre vos demandes de location ou d’achat,
+                et gérer vos dossiers.
+            </p>
+
+            <!-- Exemple card -->
+            <div class="card mt-4 p-3 shadow-sm">
+                <h5>Statut de vos dossiers</h5>
+                <p>Aucun dossier en attente pour le moment.</p>
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- Footer injecté par JS -->
+    <div id="footer"></div>
+
+    <!-- Script JS -->
+    <script type="module" src="/static/js/main.js"></script>
+
+</body>
+</html>
