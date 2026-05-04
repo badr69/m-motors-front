@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - M-Motors</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+
+<body>
+
+    <!-- Navbar injectée par JS -->
+    <div id="navbar"></div>
+
+    <!-- Dashboard Admin -->
+    <div class="d-flex">
+
+        <!-- Sidebar -->
+        <aside id="sidebar"
+               class="d-flex flex-column p-3"
+               style="min-width: 250px; background-color: #1c1c1c; height: 100vh;">
+
+            <!-- Admin info -->
+            <div class="mb-4 text-white">
+                <strong id="current-user-name"></strong>
+
+                <button id="logout-button"
+                        class="btn btn-danger w-100 mt-2">
+                    Logout
+                </button>
+            </div>
+
+            <!-- Admin links -->
+            <div class="links d-flex flex-column gap-2">
+
+                <!-- Gestion utilisateurs -->
+                <a href="/all-users.html" class="btn btn-dark">
+                    Gestion Users
+                </a>
+
+                <!-- Gestion rôles -->
+                <a href="/views/roles/all-roles.html" class="btn btn-dark">
+                    Gestion Roles
+                </a>
+
+                <!-- Gestion véhicules -->
+                <a href="/all-vehicles.html" class="btn btn-dark">
+                    Gestion Véhicules
+                </a>
+
+                <!-- Dossiers achat/location -->
+                <a href="/all-dossiers.html" class="btn btn-dark">
+                    Gestion Dossiers
+                </a>
+
+            </div>
+
+        </aside>
+
+        <!-- Main content -->
+        <main class="flex-fill p-4">
+
+            <h1>Dashboard Administrateur</h1>
+
+            <p>
+                Ici vous pouvez gérer les utilisateurs, les véhicules,
+                et valider les dossiers de location et d’achat.
+            </p>
+
+            <!-- Exemple card stats -->
+            <div class="card mt-4 p-3 shadow-sm">
+                <h5>Statistiques globales</h5>
+                <p>Utilisateurs, véhicules, dossiers en attente...</p>
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- Footer injecté par JS -->
+    <div id="footer"></div>
+
+    <!-- Script JS -->
+    <script type="module" src="/static/js/main.js"></script>
+
+</body>
+</html>
