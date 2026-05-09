@@ -1,0 +1,21 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy frontend to VPS
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_IP }}
+          username: badreddine
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /var/www/m-motors/m-motors-front
+            git pull origin main
+            docker restart m-motors-front
