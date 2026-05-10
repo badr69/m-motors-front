@@ -1,4 +1,4 @@
-const API_BASE = "/api/v1";
+const API_BASE = window.location.origin + "/api/v1";
 
 export const ENDPOINTS = {
     REGISTER: "/auth/register",
