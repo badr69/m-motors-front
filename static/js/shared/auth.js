@@ -58,32 +58,60 @@ export function clearCurrentUser() {
 // ======================
 // FORM HANDLER (IMPORTANT FIX)
 // ======================
+// export function handleAuthForms() {
+
+//     const loginForm = document.getElementById("login-form");
+//     const registerForm = document.getElementById("register-form");
+
+//     // LOGIN
+//     if (loginForm) {
+//         loginForm.addEventListener("submit", async (e) => {
+//             e.preventDefault();
+
+//             const email = loginForm.email.value;
+//             const password = loginForm.password.value;
+
+//             const res = await login(email, password);
+
+//             if (res.status === 200) {
+//                 window.location.href = "/views/dashboard/admin-dashboard.html";
+//             }
+//         });
+//     }
+
+//     // REGISTER (placeholder safe)
+//     if (registerForm) {
+//         registerForm.addEventListener("submit", (e) => {
+//             e.preventDefault();
+//             console.log("Register form submitted");
+//         });
+//     }
+// }
+
 export function handleAuthForms() {
+
+    console.log("HANDLE AUTH FORMS CALLED");
 
     const loginForm = document.getElementById("login-form");
     const registerForm = document.getElementById("register-form");
 
+    console.log("LOGIN FORM =", loginForm);
+
     // LOGIN
     if (loginForm) {
-        loginForm.addEventListener("submit", async (e) => {
-            e.preventDefault();
+    loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-            const email = loginForm.email.value;
-            const password = loginForm.password.value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
 
-            const res = await login(email, password);
+        console.log("LOGIN DATA:", email, password);
 
-            if (res.status === 200) {
-                window.location.href = "/views/dashboard/admin-dashboard.html";
-            }
-        });
-    }
+        const res = await login(email, password);
 
-    // REGISTER (placeholder safe)
-    if (registerForm) {
-        registerForm.addEventListener("submit", (e) => {
-            e.preventDefault();
-            console.log("Register form submitted");
-        });
-    }
+        if (res.status === 200) {
+            window.location.href = "/views/dashboard/admin-dashboard.html";
+        }
+    });
+}
 }
