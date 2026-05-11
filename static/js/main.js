@@ -6,20 +6,11 @@ import { initRolesList } from './roles/all-roles.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
 
-    // ======================
-    // GLOBAL LAYOUT
-    // ======================
     await loadNavbar();
     await loadFooter();
 
-    // ======================
-    // DETECT CURRENT PAGE
-    // ======================
     const page = window.location.pathname.split("/").pop() || "index.html";
 
-    // ======================
-    // ROUTING FRONT SIMPLE
-    // ======================
     switch (page) {
 
         case "contact.html":
@@ -39,9 +30,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         case "all-roles.html":
             initRolesList();
-            break;
-
-        default:
             break;
     }
 });
