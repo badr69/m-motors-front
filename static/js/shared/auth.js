@@ -1,3 +1,4 @@
+console.log("AUTH JS VERSION FINAL");
 import { api } from '../api.js';
 
 let currentUser = null;
