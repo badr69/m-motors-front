@@ -1,3 +1,5 @@
+console.log("API JS NEW VERSION LOADED");
+
 const API_BASE = "/api/v1";
 
 function getToken() {
