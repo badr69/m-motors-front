@@ -88,6 +88,6 @@ form.addEventListener("submit", async (e) => {
         alert("Succès ✔");
         window.location.href = "/views/users/all-users.html";
     } else {
-        alert("Erreur ❌");
+        alert("Erreur pas possible de cree un admin ❌");
     }
 });
