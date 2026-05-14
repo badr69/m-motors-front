@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create User - M-Motors</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container mt-5" style="max-width: 600px;">
+
+    <h2 id="form-title">Créer un utilisateur</h2>
+
+    <form id="user-form">
+
+        <input type="text" id="username" class="form-control mb-2" placeholder="Username" required>
+
+        <input type="email" id="email" class="form-control mb-2" placeholder="Email" required>
+
+        <input type="text" id="phone" class="form-control mb-2" placeholder="Phone">
+
+        <input type="text" id="address" class="form-control mb-2" placeholder="Address">
+
+        <input type="password" id="password" class="form-control mb-2" placeholder="Password">
+
+        <select id="role_id" class="form-control mb-3"></select>
+
+        <button type="submit" class="btn btn-dark w-100">
+            Valider
+        </button>
+
+    </form>
+
+</div>
+
+<script type="module" src="/static/js/users/create-user.js"></script>
+
+</body>
+</html>
