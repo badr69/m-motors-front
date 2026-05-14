@@ -1,4 +1,4 @@
-import { api, ENDPOINTS } from './api.js';
+import { api, ENDPOINTS } from '../api.js';
 
 let currentUser = null;
 
