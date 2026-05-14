@@ -2,7 +2,9 @@ import { api, ENDPOINTS } from '../api.js';
 
 let currentUser = null;
 
+// ======================
 // LOGIN
+// ======================
 export async function login(email, password) {
 
     const res = await api(ENDPOINTS.LOGIN, "POST", {
@@ -19,11 +21,16 @@ export async function login(email, password) {
     return res;
 }
 
+// ======================
 // REGISTER (USER ONLY)
+// ======================
 export async function register(username, email, password, confirmPassword) {
 
     if (password !== confirmPassword) {
-        return { status: 400, data: { message: "Passwords do not match" } };
+        return {
+            status: 400,
+            data: { message: "Passwords do not match" }
+        };
     }
 
     return await api(ENDPOINTS.REGISTER, "POST", {
@@ -33,7 +40,9 @@ export async function register(username, email, password, confirmPassword) {
     });
 }
 
+// ======================
 // CURRENT USER
+// ======================
 export async function getCurrentUser() {
 
     if (currentUser) return currentUser;
@@ -48,15 +57,65 @@ export async function getCurrentUser() {
     return null;
 }
 
+// ======================
 // LOGOUT
+// ======================
 export function logout() {
+
     localStorage.removeItem("token");
     localStorage.removeItem("refreshToken");
     currentUser = null;
+
     window.location.href = "/views/auth/login.html";
 }
 
+// ======================
+// FORM HANDLERS (IMPORTANT)
+// ======================
+export function handleAuthForms() {
 
+    const loginForm = document.getElementById("login-form");
+    const registerForm = document.getElementById("register-form");
+
+    // ======================
+    // LOGIN FORM
+    // ======================
+    if (loginForm) {
+        loginForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const email = loginForm.email.value;
+            const password = loginForm.password.value;
+
+            const res = await login(email, password);
+
+            if (res.status === 200) {
+                window.location.href = "/views/dashboard/admin-dashboard.html";
+            } else {
+                alert(res.data.message || "Login failed");
+            }
+        });
+    }
+
+    // ======================
+    // REGISTER FORM
+    // ======================
+    if (registerForm) {
+        registerForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const username = registerForm.username.value;
+            const email = registerForm.email.value;
+            const password = registerForm.password.value;
+            const confirm = registerForm.confirm_password.value;
+
+            const res = await register(username, email, password, confirm);
+
+            if (res.status === 201) {
+                alert("Account created ✔");
+                window.location.href = "/views/auth/login.html";
+            } else {
+                alert(res.data.message || "
 
 
 
