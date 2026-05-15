@@ -69,7 +69,6 @@ export async function getCurrentUser() {
 
     const token = localStorage.getItem("token");
 
-    // 🔥 évite les 401 inutiles dans la console
     if (!token) return null;
 
     const res = await api(ENDPOINTS.CURRENT_USER, "GET");
@@ -93,7 +92,7 @@ export function clearCurrentUser() {
 
 //
 // ======================
-// FORM HANDLER
+// FORM HANDLER (FIXED)
 // ======================
 //
 export function handleAuthForms() {
@@ -102,7 +101,9 @@ export function handleAuthForms() {
     const registerForm = document.getElementById("register-form");
 
     //
+    // ======================
     // LOGIN
+    // ======================
     //
     if (loginForm) {
         loginForm.addEventListener("submit", async (e) => {
@@ -114,7 +115,17 @@ export function handleAuthForms() {
             const res = await login(email, password);
 
             if (res.status === 200) {
-                window.location.href = "/views/dashboard/admin-dashboard.html";
+
+                const role = res.data.user.role;
+
+                localStorage.setItem("token", res.data.access_token);
+                localStorage.setItem("refreshToken", res.data.refresh_token);
+
+                if (role === "ADMIN") {
+                    window.location.href = "/views/dashboard/admin-dashboard.html";
+                } else {
+                    window.location.href = "/views/dashboard/user-dashboard.html";
+                }
             } else {
                 alert(res.data.message || "Login failed");
             }
@@ -122,7 +133,9 @@ export function handleAuthForms() {
     }
 
     //
-    // REGISTER (FIXED)
+    // ======================
+    // REGISTER
+    // ======================
     //
     if (registerForm) {
         registerForm.addEventListener("submit", async (e) => {
@@ -153,100 +166,3 @@ export function handleAuthForms() {
         });
     }
 }
-
-
-
-
-
-
-
-
-// import { api } from '../api.js';
-
-// let currentUser = null;
-
-// // ======================
-// // LOGIN
-// // ======================
-// export async function login(email, password) {
-
-//     const { status, data } = await api('/auth/login', 'POST', {
-//         email,
-//         password
-//     });
-
-//     if (status === 200) {
-//         localStorage.setItem("token", data.access_token);
-//         localStorage.setItem("refreshToken", data.refresh_token);
-//         currentUser = data.user;
-//     }
-
-//     return { status, data };
-// }
-
-// // ======================
-// // LOGOUT
-// // ======================
-// export function logout() {
-//     localStorage.removeItem("token");
-//     localStorage.removeItem("refreshToken");
-//     currentUser = null;
-//     window.location.href = "/views/auth/login.html";
-// }
-
-// // ======================
-// // CURRENT USER (CACHE)
-// // ======================
-// export async function getCurrentUser() {
-
-//     if (currentUser) return currentUser;
-
-//     const { status, data } = await api('/auth/currentUser', 'GET');
-
-//     if (status === 200) {
-//         currentUser = data;
-//         return data;
-//     }
-
-//     return null;
-// }
-
-// // ======================
-// // CLEAR CACHE
-// // ======================
-// export function clearCurrentUser() {
-//     currentUser = null;
-// }
-
-// // ======================
-// // FORM HANDLER (IMPORTANT FIX)
-// // ======================
-// export function handleAuthForms() {
-
-//     const loginForm = document.getElementById("login-form");
-//     const registerForm = document.getElementById("register-form");
-
-//     // LOGIN
-//     if (loginForm) {
-//         loginForm.addEventListener("submit", async (e) => {
-//             e.preventDefault();
-
-//             const email = loginForm.email.value;
-//             const password = loginForm.password.value;
-
-//             const res = await login(email, password);
-
-//             if (res.status === 200) {
-//                 window.location.href = "/views/dashboard/admin-dashboard.html";
-//             }
-//         });
-//     }
-
-//     // REGISTER (placeholder safe)
-//     if (registerForm) {
-//         registerForm.addEventListener("submit", (e) => {
-//             e.preventDefault();
-//             console.log("Register form submitted");
-//         });
-//     }
-// }
