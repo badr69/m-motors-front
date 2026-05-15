@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-console.log("AUTH JS VERSION FINAL");
-import { api } from '../api.js';
-=======
 import { api, ENDPOINTS } from '../api.js';
->>>>>>> dev
 
 let currentUser = null;
 
@@ -11,10 +6,12 @@ let currentUser = null;
 // ======================
 // AUTH GUARD
 // ======================
+//
 export function isAuthenticated() {
     return !!localStorage.getItem("token");
 }
 
+//
 // ======================
 // LOGIN
 // ======================
@@ -77,13 +74,9 @@ export function logout() {
 //
 export async function getCurrentUser() {
 
-    const token = localStorage.getItem("token");
-    if (!token) return null;
-
     if (currentUser) return currentUser;
 
     const token = localStorage.getItem("token");
-
     if (!token) return null;
 
     const res = await api(ENDPOINTS.CURRENT_USER, "GET");
@@ -98,9 +91,6 @@ export async function getCurrentUser() {
 
 //
 // ======================
-<<<<<<< HEAD
-// FORM HANDLER
-=======
 // CLEAR CACHE
 // ======================
 //
@@ -110,8 +100,7 @@ export function clearCurrentUser() {
 
 //
 // ======================
-// FORM HANDLER (FIXED)
->>>>>>> dev
+// FORM HANDLER
 // ======================
 //
 export function handleAuthForms() {
@@ -119,14 +108,11 @@ export function handleAuthForms() {
     const loginForm = document.getElementById("login-form");
     const registerForm = document.getElementById("register-form");
 
-<<<<<<< HEAD
-=======
     //
     // ======================
     // LOGIN
     // ======================
     //
->>>>>>> dev
     if (loginForm) {
         loginForm.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -138,7 +124,7 @@ export function handleAuthForms() {
 
             if (res.status === 200) {
 
-                const role = res.data.user.role;
+                const role = (res.data.user.role || "").toUpperCase();
 
                 localStorage.setItem("token", res.data.access_token);
                 localStorage.setItem("refreshToken", res.data.refresh_token);
@@ -154,19 +140,14 @@ export function handleAuthForms() {
         });
     }
 
-<<<<<<< HEAD
-=======
     //
     // ======================
     // REGISTER
     // ======================
     //
->>>>>>> dev
     if (registerForm) {
         registerForm.addEventListener("submit", async (e) => {
             e.preventDefault();
-<<<<<<< HEAD
-=======
 
             const username = registerForm.username.value;
             const email = registerForm.email.value;
@@ -190,8 +171,6 @@ export function handleAuthForms() {
             } else {
                 alert(res.data.message || "Register failed");
             }
->>>>>>> dev
         });
     }
 }
-
