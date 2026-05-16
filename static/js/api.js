@@ -1,10 +1,15 @@
-console.log("API JS NEW VERSION LOADED");
-
 const API_BASE = "/api/v1";
 
 function getToken() {
     return localStorage.getItem("token");
 }
+
+export const ENDPOINTS = {
+    LOGIN: "/auth/login",
+    REGISTER: "/auth/register",
+    CURRENT_USER: "/auth/me",
+    CONTACT: "/contact"
+};
 
 export async function api(endpoint, method = "GET", body = null) {
 
