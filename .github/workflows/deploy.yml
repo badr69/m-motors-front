@@ -17,5 +17,9 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd /var/www/m-motors/m-motors-front
+
             git pull origin main
+
+            docker cp . m-motors-front:/usr/share/nginx/html/
+
             docker restart m-motors-front
