@@ -50,30 +50,6 @@ export async function initUsersList() {
     `;
 }).join("");
 
-        // tbody.innerHTML = data.map(user => `
-        //     <tr>
-        //         <td>${user.id}</td>
-        //         <td>${user.username}</td>
-        //         <td>${user.email}</td>
-        //         <td>${user.phone || '-'}</td>
-        //         <td>${user.address || '-'}</td>
-        //         <td>${user.role?.name || user.role_id}</td>
-        //         <td>
-        //             <button class="btn btn-warning btn-sm"
-        //                 onclick="editUser(${user.id})">
-                     
-        //                 Edit
-        //             </button>
-
-        //             <button class="btn btn-danger btn-sm"
-        //                 onclick="deleteUser(${user.id})">
-                      
-        //                 Delete
-        //             </button>
-        //         </td>
-        //     </tr>
-        // `).join("");
-
     } catch (err) {
         console.error(err);
         tbody.innerHTML = `<tr><td colspan="7">Erreur serveur</td></tr>`;
