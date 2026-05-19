@@ -54,11 +54,11 @@ export async function initRolesList() {
                             Edit
                         </button>
 
-                        <button class="btn btn-sm btn-danger"
-                            on${isAdmin ? "disabled" : ""}>click="deleteRole(${role.id})"
-                            
+                        <button class="btn btn-danger btn-sm"
+                            onclick="deleteRole(${role.id})"
+                            ${isAdmin ? "disabled" : ""}>
                             Delete
-                        </button>
+                        </button>                     
                     </td>
                 </tr>
             `;

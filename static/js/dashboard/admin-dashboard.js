@@ -2,27 +2,24 @@ import { logout } from '../shared/auth.js';
 import { initDashboard } from '../shared/dashboard-commun.js';
 
 // ======================
-// INIT USER DASHBOARD
+// INIT ADMIN DASHBOARD
 // ======================
-export async function initUserDashboard() {
+export async function initAdminDashboard() {
 
     try {
 
-        // 🔹 user + UI commune
+        // user + UI commune
         const user = await initDashboard();
 
         // sécurité login
-        if (!user) {
-            window.location.href = "/views/auth/login.html";
-            return;
-        }
+        if (!user) return;
 
         // normalisation rôle
         const role = (user.role || "").toUpperCase();
 
-        // sécurité admin redirect
-        if (role === "ADMIN") {
-            window.location.href = "/views/dashboard/admin-dashboard.html";
+        // sécurité accès admin
+        if (role !== "ADMIN") {
+            window.location.href = "/views/dashboard/user-dashboard.html";
             return;
         }
 
@@ -35,10 +32,18 @@ export async function initUserDashboard() {
             logoutBtn.onclick = logout;
         }
 
-        console.log("User Dashboard chargé ✔");
+        console.log("Admin Dashboard chargé ✔");
 
     } catch (err) {
-        console.error("Erreur user dashboard :", err);
+
+        console.error("Erreur admin dashboard :", err);
+
         window.location.href = "/views/auth/login.html";
     }
 }
+
+
+
+
+
+
