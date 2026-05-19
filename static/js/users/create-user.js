@@ -23,7 +23,12 @@ async function loadRoles() {
     const { status, data } = await api('/roles', 'GET');
 
     if (status === 200 && data) {
-        roleSelect.innerHTML = data.map(role =>
+
+        const filteredRoles = data.filter(role =>
+            role.name.toUpperCase() !== "ADMIN"
+        );
+
+        roleSelect.innerHTML = filteredRoles.map(role =>
             `<option value="${role.id}">${role.name}</option>`
         ).join("");
     }
@@ -66,28 +71,40 @@ form.addEventListener("submit", async (e) => {
         email: email.value,
         phone: phone.value,
         address: address.value,
-        role_id: roleSelect.value
+        role_id: Number(roleSelect.value)
     };
 
-    // password only if filled
     if (password.value) {
         payload.password = password.value;
     }
 
-    let res;
+    try {
+        const res = userId
+            ? await api(`/users/${userId}`, "PUT", payload)
+            : await api("/users", "POST", payload);
 
-    if (userId) {
-        // UPDATE
-        res = await api(`/users/${userId}`, "PUT", payload);
-    } else {
-        // CREATE
-        res = await api("/users", "POST", payload);
-    }
+        console.log("API RESPONSE:", res);
 
-    if (res.status === 200 || res.status === 201) {
-        alert("Succès ✔");
-        window.location.href = "/views/users/all-users.html";
-    } else {
-        alert("Erreur pas possible de cree un admin ❌");
+        // ❌ FAIL HTTP
+        if (!res || res.status >= 400) {
+            alert(res?.data?.message || "Erreur serveur ❌");
+            return;
+        }
+
+        // ❌ BACKEND ERROR MESSAGE
+        if (res.data?.message && res.status >= 400) {
+            alert(res.data.message);
+            return;
+        }
+
+        // ✅ SUCCESS
+        if (res.status === 200 || res.status === 201) {
+            alert("Succès ✔");
+            window.location.href = "/views/users/all-users.html";
+        }
+
+    } catch (err) {
+        console.error(err);
+        alert("Erreur réseau ❌");
     }
 });

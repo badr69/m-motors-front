@@ -4,6 +4,15 @@ let currentUser = null;
 
 //
 // ======================
+// AUTH CHECK
+// ======================
+//
+export function isAuthenticated() {
+    return !!localStorage.getItem("token");
+}
+
+//
+// ======================
 // LOGIN
 // ======================
 //
@@ -68,14 +77,13 @@ export async function getCurrentUser() {
     if (currentUser) return currentUser;
 
     const token = localStorage.getItem("token");
-
     if (!token) return null;
 
     const res = await api(ENDPOINTS.CURRENT_USER, "GET");
 
     if (res.status === 200) {
         currentUser = res.data;
-        return res.data;
+        return currentUser;
     }
 
     return null;
@@ -92,7 +100,7 @@ export function clearCurrentUser() {
 
 //
 // ======================
-// FORM HANDLER (FIXED)
+// FORM HANDLERS
 // ======================
 //
 export function handleAuthForms() {
@@ -101,9 +109,7 @@ export function handleAuthForms() {
     const registerForm = document.getElementById("register-form");
 
     //
-    // ======================
     // LOGIN
-    // ======================
     //
     if (loginForm) {
         loginForm.addEventListener("submit", async (e) => {
@@ -116,16 +122,14 @@ export function handleAuthForms() {
 
             if (res.status === 200) {
 
-                const role = res.data.user.role;
-
-                localStorage.setItem("token", res.data.access_token);
-                localStorage.setItem("refreshToken", res.data.refresh_token);
+                const role = (res.data.user?.role || "").toUpperCase();
 
                 if (role === "ADMIN") {
                     window.location.href = "/views/dashboard/admin-dashboard.html";
                 } else {
                     window.location.href = "/views/dashboard/user-dashboard.html";
                 }
+
             } else {
                 alert(res.data.message || "Login failed");
             }
@@ -133,9 +137,7 @@ export function handleAuthForms() {
     }
 
     //
-    // ======================
     // REGISTER
-    // ======================
     //
     if (registerForm) {
         registerForm.addEventListener("submit", async (e) => {

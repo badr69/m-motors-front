@@ -55,8 +55,8 @@ export async function initRolesList() {
                         </button>
 
                         <button class="btn btn-sm btn-danger"
-                            on${isAdmin ? "disabled" : ""}>click="deleteRole(${role.id})"
-                            
+                            onclick="deleteRole(${role.id})"
+                            ${isAdmin ? "disabled" : ""}>
                             Delete
                         </button>
                     </td>
@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // ======================
 // DELETE ROLE
 // ======================
-window.deleteRole = async function(id) {
+window.deleteRole = async function (id) {
     if (!confirm("Supprimer ce rôle ?")) return;
 
     try {
@@ -106,6 +106,6 @@ window.deleteRole = async function(id) {
 // ======================
 // EDIT ROLE
 // ======================
-window.editRole = function(id) {
+window.editRole = function (id) {
     window.location.href = `/views/roles/create-role.html?id=${id}`;
 };
