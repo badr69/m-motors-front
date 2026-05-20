@@ -24,8 +24,10 @@ export async function login(email, password) {
     });
 
     if (res.status === 200) {
+
         localStorage.setItem("token", res.data.access_token);
         localStorage.setItem("refreshToken", res.data.refresh_token);
+
         currentUser = res.data.user;
     }
 
@@ -86,6 +88,10 @@ export async function getCurrentUser() {
         return res.data;
     }
 
+    if (res.status === 401) {
+        logout();
+    }
+
     return null;
 }
 
@@ -126,14 +132,12 @@ export function handleAuthForms() {
 
                 const role = (res.data.user.role || "").toUpperCase();
 
-                localStorage.setItem("token", res.data.access_token);
-                localStorage.setItem("refreshToken", res.data.refresh_token);
-
                 if (role === "ADMIN") {
                     window.location.href = "/views/dashboard/admin-dashboard.html";
                 } else {
                     window.location.href = "/views/dashboard/user-dashboard.html";
                 }
+
             } else {
                 alert(res.data.message || "Login failed");
             }
