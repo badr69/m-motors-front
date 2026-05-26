@@ -1,4 +1,4 @@
-name: Deploy Frontend
+name: Deploy M-Motors
 
 on:
   push:
@@ -9,17 +9,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy frontend to VPS
+      - name: Deploy to VPS
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.VPS_IP }}
           username: badreddine
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd /var/www/m-motors/m-motors-front
+            cd /var/www/m-motors
 
             git pull origin main
 
-            docker cp . m-motors-front:/usr/share/nginx/html/
-
-            docker restart m-motors-front
+            docker compose down
+            docker compose up -d --build
