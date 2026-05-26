@@ -1,12 +1,13 @@
-const isLocal =
-    window.location.hostname === "localhost" ||
-    window.location.hostname === "127.0.0.1";
+// const isLocal =
+//     window.location.hostname === "localhost" ||
+//     window.location.hostname === "127.0.0.1";
 
-const API_BASE = isLocal
-    ? "http://127.0.0.1:5001/api/v1"
-    : "http://84.46.241.76:5000/api/v1";
+// const API_BASE = isLocal
+//     ? "http://127.0.0.1:5001/api/v1"
+//     : "http://84.46.241.76:5000/api/v1";
 // const API_BASE = "/api/v1";
-// const API_BASE = "/api/v1";
+const API_BASE = "http://localhost:5001/api/v1";
+
 
 function getToken() {
     return localStorage.getItem("token");
