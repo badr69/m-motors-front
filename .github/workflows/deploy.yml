@@ -1,4 +1,4 @@
-name: Deploy M-Motors
+name: Deploy M-Motors-front
 
 on:
   push:
@@ -26,29 +26,3 @@ jobs:
 
 
 
-
-
-# name: Deploy M-Motors
-
-# on:
-#   push:
-#     branches: [main]
-
-# jobs:
-#   deploy:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - name: Deploy to VPS
-#         uses: appleboy/ssh-action@v1
-#         with:
-#           host: ${{ secrets.VPS_IP }}
-#           username: badreddine
-#           key: ${{ secrets.SSH_KEY }}
-#           script: |
-#             cd /var/www/m-motors
-
-#             git pull origin main
-
-#             docker compose down
-#             docker compose up -d --build
