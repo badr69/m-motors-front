@@ -13,17 +13,17 @@ const isLocal =
 
 const API_BASE = isLocal
     ? "http://localhost:5001/api/v1"
-    : "";
+    : "/api/v1";
 
 function getToken() {
     return localStorage.getItem("token");
 }
 
 export const ENDPOINTS = {
-    LOGIN: "/api/v1/auth/login",
-    REGISTER: "/api/v1/auth/register",
-    CURRENT_USER: "/api/v1/auth/currentUser",
-    CONTACT: "/api/v1/contact"
+    LOGIN: "/auth/login",
+    REGISTER: "/auth/register",
+    CURRENT_USER: "/auth/currentUser",
+    CONTACT: "/contact"
 };
 
 export async function api(endpoint, method = "GET", body = null) {
