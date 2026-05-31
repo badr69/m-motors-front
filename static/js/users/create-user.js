@@ -7,30 +7,52 @@ const email = document.getElementById("email");
 const phone = document.getElementById("phone");
 const address = document.getElementById("address");
 const password = document.getElementById("password");
+
 const roleSelect = document.getElementById("role_id");
+const roleContainer = document.getElementById("role-container");
+
 const title = document.getElementById("form-title");
 
 // ======================
-// GET USER ID FROM URL
+// USER ID (edit mode)
 // ======================
 const params = new URLSearchParams(window.location.search);
 const userId = params.get("id");
 
 // ======================
-// LOAD ROLES (dropdown)
+// CURRENT USER (AUTH)
+// ======================
+const currentUser = JSON.parse(localStorage.getItem("user"));
+const isAdmin = currentUser?.role === "ADMIN";
+
+// ======================
+// UI INIT
+// ======================
+if (!isAdmin && roleContainer) {
+    roleContainer.style.display = "none";
+}
+
+// ======================
+// LOAD ROLES (ADMIN ONLY)
 // ======================
 async function loadRoles() {
-    const { status, data } = await api('/roles', 'GET');
+    if (!isAdmin) return;
 
-    if (status === 200 && data) {
-        roleSelect.innerHTML = data.map(role =>
-            `<option value="${role.id}">${role.name}</option>`
-        ).join("");
+    try {
+        const { status, data } = await api('/roles', 'GET');
+
+        if (status === 200 && Array.isArray(data)) {
+            roleSelect.innerHTML = data.map(role =>
+                `<option value="${role.id}">${role.name}</option>`
+            ).join("");
+        }
+    } catch (err) {
+        console.warn("Roles not available:", err);
     }
 }
 
 // ======================
-// LOAD USER (edit mode)
+// LOAD USER (EDIT MODE)
 // ======================
 async function loadUser(id) {
     const { status, data } = await api(`/users/${id}`, 'GET');
@@ -40,7 +62,11 @@ async function loadUser(id) {
         email.value = data.email;
         phone.value = data.phone || "";
         address.value = data.address || "";
-        roleSelect.value = data.role_id;
+
+        // role only if admin
+        if (isAdmin && data.role_id) {
+            roleSelect.value = data.role_id;
+        }
 
         title.textContent = "Modifier utilisateur";
     }
@@ -56,7 +82,7 @@ if (userId) {
 }
 
 // ======================
-// SUBMIT FORM
+// SUBMIT
 // ======================
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -66,10 +92,13 @@ form.addEventListener("submit", async (e) => {
         email: email.value,
         phone: phone.value,
         address: address.value,
-        role_id: roleSelect.value
     };
 
-    // password only if filled
+    // role only for admin
+    if (isAdmin && roleSelect.value) {
+        payload.role_id = roleSelect.value;
+    }
+
     if (password.value) {
         payload.password = password.value;
     }
@@ -77,10 +106,8 @@ form.addEventListener("submit", async (e) => {
     let res;
 
     if (userId) {
-        // UPDATE
         res = await api(`/users/${userId}`, "PUT", payload);
     } else {
-        // CREATE
         res = await api("/users", "POST", payload);
     }
 
@@ -88,6 +115,6 @@ form.addEventListener("submit", async (e) => {
         alert("Succès ✔");
         window.location.href = "/views/users/all-users.html";
     } else {
-        alert("Erreur pas possible de cree un admin ❌");
+        alert("Erreur ❌");
     }
 });

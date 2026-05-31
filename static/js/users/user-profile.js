@@ -1,75 +1,108 @@
 import { api } from '../api.js';
 
 // ======================
-// LOAD MY PROFILE
+// LOG
 // ======================
-async function loadProfile() {
+console.log("[user-profile] script loaded");
 
-    const tbody = document.getElementById("profile-table-body");
-    const editBtn = document.getElementById("editProfileBtn");
-    const deleteBtn = document.getElementById("deleteProfileBtn");
+// ======================
+// ELEMENTS
+// ======================
+const tableBody = document.getElementById("profile-table-body");
 
-    if (!tbody) return;
+const editBtn = document.getElementById("editProfileBtn");
+const deleteBtn = document.getElementById("deleteProfileBtn");
 
-    try {
-        const { status, data } = await api('/auth/currentUser', 'GET');
+console.log("[user-profile] DOM:", {
+    tableBody,
+    editBtn,
+    deleteBtn
+});
 
-        console.log("STATUS:", status);
-        console.log("DATA:", data);
+// ======================
+// GET CURRENT USER (SAFE)
+// ======================
+const currentUser = JSON.parse(localStorage.getItem("user"));
 
-        if (status !== 200 || !data) {
-            tbody.innerHTML = `<tr><td colspan="2">Erreur chargement</td></tr>`;
-            return;
-        }
+console.log("[user-profile] currentUser:", currentUser);
 
-        tbody.innerHTML = `
-            <tr><td>ID</td><td>${data.id}</td></tr>
+const userId = currentUser?.user_id || currentUser?.id;
+
+console.log("[user-profile] resolved userId:", userId);
+
+// ======================
+// LOAD PROFILE
+// ======================
+async function loadProfile(id) {
+    console.log("[user-profile] loading profile:", id);
+
+    const res = await api(`/users/${id}`, 'GET');
+
+    console.log("[user-profile] API response:", res);
+
+    const { status, data } = res;
+
+    if (status === 200 && data) {
+
+        console.log("[user-profile] data received:", data);
+
+        tableBody.innerHTML = `
             <tr><td>Username</td><td>${data.username}</td></tr>
             <tr><td>Email</td><td>${data.email}</td></tr>
             <tr><td>Phone</td><td>${data.phone || '-'}</td></tr>
             <tr><td>Address</td><td>${data.address || '-'}</td></tr>
-            <tr><td>Role</td><td>${data.role}</td></tr>
         `;
 
-        // =====================
-        // EDIT PROFILE
-        // =====================
-        if (editBtn) {
-            editBtn.onclick = () => {
-                window.location.href =
-                    `/views/users/create-user.html?id=${data.id}&mode=edit`;
-            };
-        }
-
-        // =====================
-        // DELETE PROFILE
-        // =====================
-        if (deleteBtn) {
-            deleteBtn.onclick = async () => {
-
-                if (!confirm("Supprimer votre compte ?")) return;
-
-                const res = await api(`/users/${data.id}`, 'DELETE');
-
-                if (res.status === 200 || res.status === 204) {
-                    alert("Compte supprimé ✔");
-                    window.location.href = "/views/auth/login.html";
-                } else {
-                    alert("Erreur suppression ❌");
-                    console.error(res);
-                }
-            };
-        }
-
-    } catch (err) {
-        console.error(err);
-        tbody.innerHTML = `<tr><td colspan="2">Erreur serveur</td></tr>`;
+        console.log("[user-profile] render OK ✔");
+    } else {
+        console.warn("[user-profile] failed to load profile");
     }
 }
 
-document.addEventListener("DOMContentLoaded", loadProfile);
+// ======================
+// EDIT BUTTON
+// ======================
+if (editBtn) {
+    editBtn.addEventListener("click", () => {
+        console.log("[user-profile] edit clicked");
 
+        window.location.href = `/views/users/create-user.html?id=${userId}`;
+    });
+} else {
+    console.warn("[user-profile] editBtn not found");
+}
 
+// ======================
+// DELETE BUTTON
+// ======================
+if (deleteBtn) {
+    deleteBtn.addEventListener("click", async () => {
 
+        console.log("[user-profile] delete clicked");
 
+        if (!confirm("Supprimer votre compte ?")) return;
+
+        const res = await api(`/users/${userId}`, "DELETE");
+
+        console.log("[user-profile] delete response:", res);
+
+        if (res.status === 200) {
+            alert("Compte supprimé ✔");
+            window.location.href = "/views/auth/login.html";
+        } else {
+            alert("Erreur ❌");
+        }
+    });
+} else {
+    console.warn("[user-profile] deleteBtn not found");
+}
+
+// ======================
+// INIT
+// ======================
+if (userId) {
+    loadProfile(userId);
+} else {
+    console.error("[user-profile] NO USER FOUND IN LOCALSTORAGE ❌");
+}
 
