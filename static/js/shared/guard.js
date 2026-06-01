@@ -31,7 +31,7 @@ export async function requireRole(allowedRoles = []) {
 
     if (!isAllowed) {
 
-        // redirection intelligente selon rôle réel
+        // redirection selon rôle réel
         if (role === "ADMIN") {
             window.location.href = "/views/dashboard/admin-dashboard.html";
         } else {

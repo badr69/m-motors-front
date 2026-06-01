@@ -41,7 +41,3 @@ export async function initUserDashboard() {
         window.location.href = "/views/auth/login.html";
     }
 }
-
-
-
-

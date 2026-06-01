@@ -3,64 +3,137 @@ const isLocal =
   window.location.hostname === "127.0.0.1";
 
 const API_BASE = isLocal
-  ? "http://localhost:5001/api/v1"
-  : "/api/v1";
+  ? "http://127.0.0.1:5001/api/v1"
+  : "http://84.46.241.76/api/v1";
 
 function getToken() {
-    return localStorage.getItem("token");
+  return localStorage.getItem("token");
 }
 
 export const ENDPOINTS = {
-    LOGIN: "/auth/login",
-    REGISTER: "/auth/register",
-    CURRENT_USER: "/auth/currentUser",
-    CONTACT: "/contact"
+  LOGIN: "/auth/login",
+  REGISTER: "/auth/register",
+
+  //doit matcher ton backend
+  CURRENT_USER: "/auth/currentUser",
+
+  CONTACT: "/contact"
 };
 
 export async function api(endpoint, method = "GET", body = null) {
 
-    const headers = {
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-    };
+  const token = getToken();
 
-    const token = getToken();
+  const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    ...(token && token !== "null" && token !== "undefined"
+      ? { Authorization: `Bearer ${token}` }
+      : {})
+  };
 
-    if (token && token !== "null" && token !== "undefined") {
-        headers["Authorization"] = `Bearer ${token}`;
-    }
+  try {
+    const res = await fetch(`${API_BASE}${endpoint}`, {
+      method,
+      headers,
+      body: body ? JSON.stringify(body) : undefined
+    });
 
+    let data;
     try {
-
-        const res = await fetch(API_BASE + endpoint, {
-            method,
-            headers,
-            body: body ? JSON.stringify(body) : undefined
-        });
-
-        let data = null;
-
-try {
-    data = await res.json();
-} catch (e) {
-    data = { message: "Invalid response" };
-}
-
-if (!res.ok) {
-    console.log("[API ERROR]", endpoint, res.status, data);
-}
-
-        console.log("[API]", endpoint, res.status, data);
-
-        return { status: res.status, data };
-
-    } catch (err) {
-
-        console.error("[API ERROR]", err);
-
-        return {
-            status: 0,
-            data: { error: "Network error" }
-        };
+      data = await res.json();
+    } catch {
+      data = { message: "Invalid JSON response" };
     }
+
+    if (!res.ok) {
+      console.log("[API ERROR]", endpoint, res.status, data);
+    }
+
+    console.log("[API]", endpoint, res.status, data);
+
+    return { status: res.status, data };
+
+  } catch (err) {
+    console.error("[API ERROR]", err);
+
+    return {
+      status: 0,
+      data: { error: "Network error" }
+    };
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
+// const API_BASE =
+//   window.location.hostname === "127.0.0.1"
+//     ? "http://127.0.0.1:5001/api/v1"
+//     : "http://84.46.241.76/api/v1";
+
+// function getToken() {
+//     return localStorage.getItem("token");
+// }
+
+// export const ENDPOINTS = {
+//     LOGIN: "/auth/login",
+//     REGISTER: "/auth/register",
+//     CURRENT_USER: "/auth/currentUser",
+//     CONTACT: "/contact"
+// };
+
+// export async function api(endpoint, method = "GET", body = null) {
+
+//     const headers = {
+//         "Content-Type": "application/json",
+//         "Accept": "application/json"
+//     };
+
+//     const token = getToken();
+
+//     if (token && token !== "null" && token !== "undefined") {
+//         headers["Authorization"] = `Bearer ${token}`;
+//     }
+
+//     try {
+
+//         const res = await fetch(API_BASE + endpoint, {
+//             method,
+//             headers,
+//             body: body ? JSON.stringify(body) : undefined
+//         });
+
+//         let data = null;
+
+// try {
+//     data = await res.json();
+// } catch (e) {
+//     data = { message: "Invalid response" };
+// }
+
+// if (!res.ok) {
+//     console.log("[API ERROR]", endpoint, res.status, data);
+// }
+
+//         console.log("[API]", endpoint, res.status, data);
+
+//         return { status: res.status, data };
+
+//     } catch (err) {
+
+//         console.error("[API ERROR]", err);
+
+//         return {
+//             status: 0,
+//             data: { error: "Network error" }
+//         };
+//     }
+// }
