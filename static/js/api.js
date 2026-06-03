@@ -1,4 +1,4 @@
-console.log("🔥 API.JS VERSION FINAL");
+console.log("API.JS VERSION FINAL");
 
 //
 // ======================

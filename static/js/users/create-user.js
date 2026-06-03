@@ -68,9 +68,13 @@ async function loadRoles() {
         const { status, data } = await api('/roles', 'GET');
 
         if (status === 200 && Array.isArray(data)) {
-            roleSelect.innerHTML = data.map(role =>
-                `<option value="${role.id}">${role.name}</option>`
-            ).join("");
+
+            roleSelect.innerHTML = data
+                .filter(role => role.name.toUpperCase() !== "ADMIN")
+                .map(role =>
+                    `<option value="${role.id}">${role.name}</option>`
+                )
+                .join("");
         }
 
     } catch (err) {

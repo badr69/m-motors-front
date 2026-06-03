@@ -80,17 +80,33 @@ if (deleteBtn) {
 
         console.log("[user-profile] delete clicked");
 
+        const currentUser = JSON.parse(localStorage.getItem("user"));
+        const userIdToDelete = currentUser?.user_id || currentUser?.id;
+
+        if (!currentUser || !userIdToDelete) {
+            alert("Utilisateur introuvable");
+            return;
+        }
+
         if (!confirm("Supprimer votre compte ?")) return;
 
-        const res = await api(`/users/${userId}`, "DELETE");
+        const res = await api(`/users/${userIdToDelete}`, "DELETE");
 
         console.log("[user-profile] delete response:", res);
 
         if (res.status === 200) {
+
             alert("Compte supprimé ✔");
+
+            // IMPORTANT: clean session
+            localStorage.removeItem("token");
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("user");
+
             window.location.href = "/views/auth/login.html";
+
         } else {
-            alert("Erreur ❌");
+            alert(res.data?.message || "Erreur suppression ❌");
         }
     });
 } else {
