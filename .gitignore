@@ -1,18 +1,21 @@
-# Fichiers de logs
+
+# Logs
 *.log
 
-# Fichiers temporaires du système
+# System
 .DS_Store
 Thumbs.db
 
-# IDE / éditeurs
+# IDE
 .idea/
 .vscode/
 
-# Environnements / dépendances (si jamais tu en ajoutes plus tard)
+# Node 
 node_modules/
 dist/
 build/
 
-# Fichiers de configuration locaux
-#.env
+# Cypress 
+cypress/videos/
+cypress/screenshots/
+
