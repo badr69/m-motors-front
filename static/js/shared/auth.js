@@ -1,69 +1,62 @@
-console.log("🔥 AUTH.JS DEBUG MODE ACTIVATED");
+console.log("🔥 AUTH.JS LOADED");
 
 import { api, ENDPOINTS } from "../api.js";
 
 let currentUser = null;
 
+// ======================
+// LOG HELPERS
+// ======================
 const DEBUG = true;
 
 function log(...args) {
-    if (DEBUG) console.log("[AUTH DEBUG]", ...args);
+    if (DEBUG) console.log("[AUTH]", ...args);
 }
 
 function warn(...args) {
-    console.warn("[AUTH WARN]", ...args);
+    console.warn("[AUTH]", ...args);
 }
 
 function error(...args) {
-    console.error("[AUTH ERROR]", ...args);
+    console.error("[AUTH]", ...args);
 }
 
-//
 // ======================
-// AUTH STATE
+// CHECK AUTH
 // ======================
-//
 export function isAuthenticated() {
-
     const token = localStorage.getItem("token");
-
-    log("TOKEN CHECK =", token);
 
     return !!token &&
         token !== "null" &&
         token !== "undefined";
 }
 
-//
 // ======================
-// ROLE FROM JWT (SOURCE UNIQUE)
+// JWT ROLE (OPTIONAL)
 // ======================
-//
 function getRoleFromToken(token) {
     try {
         const payload = JSON.parse(atob(token.split(".")[1]));
         return (payload.role || "").toUpperCase();
-    } catch (e) {
-        console.error("JWT decode error", e);
+    } catch {
         return "";
     }
 }
 
-//
 // ======================
 // LOGIN
 // ======================
-//
 export async function login(email, password) {
 
-    log("LOGIN START", { email, password });
+    log("LOGIN START", email);
 
     const res = await api(ENDPOINTS.LOGIN, "POST", {
         email,
         password
     });
 
-    log("API RESPONSE =", res);
+    log("LOGIN RESPONSE", res);
 
     if (!res || res.status !== 200) {
         warn("LOGIN FAILED");
@@ -79,21 +72,20 @@ export async function login(email, password) {
         return res;
     }
 
-    // RESET SESSION PROPRE
+    // reset storage
     localStorage.removeItem("token");
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("user");
 
-    // SAVE TOKEN ONLY
+    // save
     localStorage.setItem("token", token);
     localStorage.setItem("refreshToken", refreshToken);
 
-    // SAVE USER (STABLE VERSION)
     localStorage.setItem("user", JSON.stringify({
         id: user.id,
         email: user.email,
         username: user.username,
-        role: user.role // ⚠️ FIX IMPORTANT: jamais modifié après
+        role: user.role // IMPORTANT
     }));
 
     currentUser = user;
@@ -103,14 +95,10 @@ export async function login(email, password) {
     return res;
 }
 
-//
 // ======================
-// CURRENT USER (SAFE)
+// CURRENT USER
 // ======================
-//
 export async function getCurrentUser() {
-
-    log("GET CURRENT USER");
 
     if (currentUser) return currentUser;
 
@@ -120,7 +108,7 @@ export async function getCurrentUser() {
         try {
             currentUser = JSON.parse(stored);
             return currentUser;
-        } catch (e) {
+        } catch {
             localStorage.removeItem("user");
         }
     }
@@ -129,14 +117,14 @@ export async function getCurrentUser() {
 
     if (res.status === 200) {
 
-        // ❌ NE PAS ÉCRASER ROLE
+        const saved = JSON.parse(localStorage.getItem("user") || "{}");
+
         currentUser = {
-            ...JSON.parse(localStorage.getItem("user") || "{}"),
-            ...res.data,
+            ...saved,
+            ...res.data
         };
 
-        // 🔒 force role from localStorage (stable)
-        const saved = JSON.parse(localStorage.getItem("user") || "{}");
+        // FORCE ROLE STABILITY
         currentUser.role = saved.role;
 
         return currentUser;
@@ -149,11 +137,9 @@ export async function getCurrentUser() {
     return null;
 }
 
-//
 // ======================
 // LOGOUT
 // ======================
-//
 export function logout() {
 
     warn("LOGOUT");
@@ -167,18 +153,16 @@ export function logout() {
     window.location.href = "/views/auth/login.html";
 }
 
-//
 // ======================
-// FORM HANDLER
+// LOGIN FORM HANDLER
 // ======================
-//
 export function handleAuthForms() {
 
-    const loginForm = document.getElementById("login-form");
+    const form = document.getElementById("login-form");
 
-    if (!loginForm) return;
+    if (!form) return;
 
-    loginForm.addEventListener("submit", async (e) => {
+    form.addEventListener("submit", async (e) => {
 
         e.preventDefault();
 

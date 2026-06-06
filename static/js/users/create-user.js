@@ -1,10 +1,8 @@
-import { api } from '../api.js';
+import { api } from "../api.js";
 
-//
 // ======================
-// FORM ELEMENTS
+// FORM
 // ======================
-//
 const form = document.getElementById("user-form");
 
 const username = document.getElementById("username");
@@ -14,116 +12,75 @@ const address = document.getElementById("address");
 const password = document.getElementById("password");
 
 const roleSelect = document.getElementById("role_id");
-const roleContainer = document.getElementById("role-container");
-
 const title = document.getElementById("form-title");
 
-//
 // ======================
-// USER ID (edit mode)
+// USER ID
 // ======================
-//
 const params = new URLSearchParams(window.location.search);
 const userId = params.get("id");
 
-//
 // ======================
-// CURRENT USER
+// USER LOCAL
 // ======================
-//
-const currentUser = JSON.parse(localStorage.getItem("user"));
+const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
 
-const isAdmin =
-    (currentUser?.role || currentUser?.role_name || "").toUpperCase() === "ADMIN";
+const isAdmin = (currentUser.role || "").toUpperCase() === "ADMIN";
 
-//
 // ======================
-// UI INIT
+// LOAD ROLES
 // ======================
-//
-if (!isAdmin && roleContainer) {
-    roleContainer.style.display = "none";
-}
-
-//
-// ======================
-// RESET FORM (CREATE MODE)
-// ======================
-//
-function resetForm() {
-    form.reset();
-    title.textContent = "Créer utilisateur";
-}
-
-//
-// ======================
-// LOAD ROLES (ADMIN ONLY)
-// ======================
-//
 async function loadRoles() {
 
     if (!isAdmin) return;
 
-    try {
-        const { status, data } = await api('/roles', 'GET');
+    const res = await api("/roles", "GET");
 
-        if (status === 200 && Array.isArray(data)) {
+    const roles = res.data;
 
-            roleSelect.innerHTML = data
-                .filter(role => role.name.toUpperCase() !== "ADMIN")
-                .map(role =>
-                    `<option value="${role.id}">${role.name}</option>`
-                )
-                .join("");
-        }
+    if (!Array.isArray(roles)) return;
 
-    } catch (err) {
-        console.warn("[create-user] roles error:", err);
-    }
+    roleSelect.innerHTML = roles
+        .filter(r => r.name.toUpperCase() !== "ADMIN")
+        .map(r => `<option value="${r.id}">${r.name}</option>`)
+        .join("");
 }
 
-//
 // ======================
-// LOAD USER (EDIT MODE)
+// LOAD USER
 // ======================
-//
 async function loadUser(id) {
 
-    const { status, data } = await api(`/users/${id}`, 'GET');
+    const res = await api(`/users/${id}`, "GET");
 
-    if (status === 200 && data) {
+    const user = res.data;
 
-        username.value = data.username;
-        email.value = data.email;
-        phone.value = data.phone || "";
-        address.value = data.address || "";
+    if (!user) return;
 
-        if (isAdmin && data.role_id) {
-            roleSelect.value = data.role_id;
-        }
+    username.value = user.username;
+    email.value = user.email;
+    phone.value = user.phone || "";
+    address.value = user.address || "";
 
-        title.textContent = "Modifier utilisateur";
+    if (user.role_id) {
+        roleSelect.value = user.role_id;
     }
+
+    title.textContent = "Modifier utilisateur";
 }
 
-//
 // ======================
 // INIT
 // ======================
-//
 loadRoles();
 
 if (userId) {
     loadUser(userId);
-} else {
-    resetForm();
 }
 
-//
 // ======================
-// SUBMIT FORM
+// SUBMIT
 // ======================
-//
 form.addEventListener("submit", async (e) => {
 
     e.preventDefault();
@@ -135,36 +92,24 @@ form.addEventListener("submit", async (e) => {
         address: address.value,
     };
 
-    // ROLE ONLY ADMIN
-    if (isAdmin && roleSelect.value) {
+    if (roleSelect.value) {
         payload.role_id = roleSelect.value;
     }
 
-    // PASSWORD ONLY IF PROVIDED
     if (password.value) {
         payload.password = password.value;
     }
 
-    let res;
+    const url = userId ? `/users/${userId}` : "/users";
+    const method = userId ? "PUT" : "POST";
 
-    // CREATE OR UPDATE
-    if (userId) {
-        res = await api(`/users/${userId}`, "PUT", payload);
-    } else {
-        res = await api("/users", "POST", payload);
-    }
+    const res = await api(url, method, payload);
 
     if (res.status === 200 || res.status === 201) {
-
         alert("Succès ✔");
-
-        const redirectTo = isAdmin
-            ? "/views/users/all-users.html"
-            : "/views/users/user-profile.html";
-
-        window.location.href = redirectTo;
-
+        window.location.href = "/views/users/all-users.html";
     } else {
-        alert("Erreur ❌");
+        console.log(res);
+        alert(res.message || "Erreur ❌");
     }
 });
