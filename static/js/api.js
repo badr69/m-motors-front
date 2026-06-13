@@ -46,7 +46,7 @@ export async function api(endpoint, method = "GET", body = null) {
 
         return {
             status: res.status,
-            data: json.data ?? null,
+            data: json.data ?? json,
             message: json.message ?? null,
             raw: json
         };
@@ -68,5 +68,5 @@ export async function api(endpoint, method = "GET", body = null) {
 // ======================
 export const ENDPOINTS = {
     LOGIN: "/auth/login",
-    CURRENT_USER: "/auth/currentUser"
+    CURRENT_USER: "/auth/me"
 };
