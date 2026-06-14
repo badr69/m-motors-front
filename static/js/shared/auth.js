@@ -179,7 +179,7 @@ export function handleRegisterForm() {
             password
         };
 
-        // const res = await api("/auth/register", "POST", payload);
+       
         const res = await api(ENDPOINTS.REGISTER, "POST", payload);
 
         log("REGISTER RESPONSE", res);
