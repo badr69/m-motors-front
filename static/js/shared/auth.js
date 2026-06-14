@@ -1,4 +1,4 @@
-console.log("🔥 AUTH.JS LOADED");
+console.log("AUTH.JS LOADED");
 
 import { api, ENDPOINTS } from "../api.js";
 
@@ -22,7 +22,7 @@ function error(...args) {
 }
 
 // ======================
-// CHECK AUTH
+// AUTH CHECK
 // ======================
 export function isAuthenticated() {
     const token = localStorage.getItem("token");
@@ -33,7 +33,7 @@ export function isAuthenticated() {
 }
 
 // ======================
-// JWT ROLE (OPTIONAL)
+// JWT ROLE
 // ======================
 function getRoleFromToken(token) {
     try {
@@ -72,12 +72,10 @@ export async function login(email, password) {
         return res;
     }
 
-    // reset storage
     localStorage.removeItem("token");
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("user");
 
-    // save
     localStorage.setItem("token", token);
     localStorage.setItem("refreshToken", refreshToken);
 
@@ -85,7 +83,7 @@ export async function login(email, password) {
         id: user.id,
         email: user.email,
         username: user.username,
-        role: user.role // IMPORTANT
+        role: user.role
     }));
 
     currentUser = user;
@@ -116,7 +114,6 @@ export async function getCurrentUser() {
     const res = await api(ENDPOINTS.CURRENT_USER, "GET");
 
     if (res.status === 200) {
-
         const saved = JSON.parse(localStorage.getItem("user") || "{}");
 
         currentUser = {
@@ -124,7 +121,6 @@ export async function getCurrentUser() {
             ...res.data
         };
 
-        // FORCE ROLE STABILITY
         currentUser.role = saved.role;
 
         return currentUser;
@@ -150,20 +146,62 @@ export function logout() {
 
     currentUser = null;
 
-    window.location.href = "/views/auth/login.html";
+    window.location.href = "/index.html";
+}
+
+// ======================================================
+// REGISTER form
+// ======================================================
+export function handleRegisterForm() {
+
+    const form = document.getElementById("register-form");
+    if (!form) return;
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const feedback = document.querySelector(".feedback");
+        if (!feedback) return;
+
+        const password = document.getElementById("password").value;
+        const confirm = document.getElementById("confirm_password").value;
+
+        if (password !== confirm) {
+            feedback.textContent = "Les mots de passe ne correspondent pas";
+            return;
+        }
+
+        const payload = {
+            username: document.getElementById("username").value,
+            email: document.getElementById("email").value,
+            phone: document.getElementById("phone").value,
+            address: document.getElementById("address").value,
+            password
+        };
+
+        // const res = await api("/auth/register", "POST", payload);
+        const res = await api(ENDPOINTS.REGISTER, "POST", payload);
+
+        log("REGISTER RESPONSE", res);
+
+        if (res.status === 201 || res.status === 200) {
+            alert("Compte créé ✔");
+            window.location.href = "/views/auth/login.html";
+        } else {
+            feedback.textContent = res.message || "Erreur inscription";
+        }
+    });
 }
 
 // ======================
-// LOGIN FORM HANDLER
+// LOGIN FORM
 // ======================
 export function handleAuthForms() {
 
     const form = document.getElementById("login-form");
-
     if (!form) return;
 
     form.addEventListener("submit", async (e) => {
-
         e.preventDefault();
 
         const email = document.getElementById("email").value;

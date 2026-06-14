@@ -90,7 +90,8 @@ if (deleteBtn) {
 
         if (!confirm("Supprimer votre compte ?")) return;
 
-        const res = await api(`/users/${userIdToDelete}`, "DELETE");
+        // const res = await api(`/users/${userIdToDelete}`, "DELETE");
+        const res = await api("/users/me", "DELETE");
 
         console.log("[user-profile] delete response:", res);
 

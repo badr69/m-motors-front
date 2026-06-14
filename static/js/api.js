@@ -68,5 +68,6 @@ export async function api(endpoint, method = "GET", body = null) {
 // ======================
 export const ENDPOINTS = {
     LOGIN: "/auth/login",
+    REGISTER: "/auth/register",
     CURRENT_USER: "/auth/me"
 };
