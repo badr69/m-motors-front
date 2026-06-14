@@ -1,5 +1,5 @@
 import { loadNavbar, loadFooter } from './layout.js';
-import { handleAuthForms } from './shared/auth.js';
+import { handleAuthForms, handleRegisterForm  } from './shared/auth.js';
 import { handleContactForm } from './contact.js';
 import { initDashboard } from './shared/dashboard-commun.js';
 import { initRolesList } from './roles/all-roles.js';
@@ -18,8 +18,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             break;
 
         case "login.html":
+             handleAuthForms();
+            break;
+
         case "register.html":
-            handleAuthForms();
+            handleRegisterForm();
             break;
 
         case "dashboard.html":

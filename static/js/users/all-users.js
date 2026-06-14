@@ -1,18 +1,14 @@
-import { api } from '../api.js';
+console.log("🔥 USERS JS LOADED");
 
-const tableBody = document.getElementById("users-table-body");
+import { api } from "../api.js";
 
-// ======================
-// LOAD USERS
-// ======================
 async function loadUsers() {
-    const res = await api('/users', 'GET');
+
+    const res = await api("/users", "GET");
 
     console.log("[USERS RESPONSE]", res);
 
-    const users = Array.isArray(res.data)
-        ? res.data
-        : res.data?.data;
+    const users = res.data; // ✅ FIX IMPORTANT
 
     const tableBody = document.getElementById("users-table-body");
 
@@ -20,7 +16,7 @@ async function loadUsers() {
         tableBody.innerHTML = `
             <tr>
                 <td colspan="7" class="text-center text-danger">
-                    Invalid users format
+                    No users found
                 </td>
             </tr>
         `;
@@ -34,7 +30,10 @@ async function loadUsers() {
             <td>${user.email}</td>
             <td>${user.phone || '-'}</td>
             <td>${user.address || '-'}</td>
-            <td>${user.role?.name || user.role || '-'}</td>
+
+            <!-- ROLE FIX -->
+            <td>${user.role || '-'}</td>
+
             <td>
                 <a href="/views/users/create-user.html?id=${user.id}" class="btn btn-warning btn-sm">
                     Edit
@@ -48,24 +47,18 @@ async function loadUsers() {
     `).join("");
 }
 
-// ======================
-// DELETE USER
-// ======================
 window.deleteUser = async function (id) {
 
     if (!confirm("Supprimer cet utilisateur ?")) return;
 
-    const { status } = await api(`/users/${id}`, 'DELETE');
+    const res = await api(`/users/${id}`, "DELETE");
 
-    if (status === 200) {
+    if (res.status === 200) {
         alert("Utilisateur supprimé ✔");
         loadUsers();
     } else {
-        alert("Erreur suppression ❌");
+        alert(res.message || "Erreur suppression ❌");
     }
 };
 
-// ======================
-// INIT
-// ======================
 loadUsers();

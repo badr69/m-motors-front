@@ -1,10 +1,8 @@
-import { api } from '../api.js';
+import { api } from "../api.js";
 
-//
 // ======================
-// FORM ELEMENTS
+// FORM
 // ======================
-//
 const form = document.getElementById("user-form");
 
 const username = document.getElementById("username");
@@ -14,118 +12,71 @@ const address = document.getElementById("address");
 const password = document.getElementById("password");
 
 const roleSelect = document.getElementById("role_id");
-const roleContainer = document.getElementById("role-container");
-
 const title = document.getElementById("form-title");
 
-//
 // ======================
-// USER ID (edit mode)
+// USER ID (URL PARAM)
 // ======================
-//
 const params = new URLSearchParams(window.location.search);
 const userId = params.get("id");
 
-//
 // ======================
-// CURRENT USER
+// CURRENT USER (LOCAL STORAGE)
 // ======================
-//
-const currentUser = JSON.parse(localStorage.getItem("user"));
+const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+const isAdmin = (currentUser.role || "").toUpperCase() === "ADMIN";
 
-const isAdmin =
-    (currentUser?.role || currentUser?.role_name || "").toUpperCase() === "ADMIN";
-
-//
-// ======================
-// UI INIT
-// ======================
-//
-if (!isAdmin && roleContainer) {
-    roleContainer.style.display = "none";
-}
-
-//
-// ======================
-// RESET FORM (CREATE MODE)
-// ======================
-//
-function resetForm() {
-    form.reset();
-    title.textContent = "Créer utilisateur";
-}
-
-//
 // ======================
 // LOAD ROLES (ADMIN ONLY)
 // ======================
-//
 async function loadRoles() {
-
     if (!isAdmin) return;
 
-    try {
-        const { status, data } = await api('/roles', 'GET');
+    const res = await api("/roles", "GET");
+    const roles = res.data;
 
-        if (status === 200 && Array.isArray(data)) {
+    if (!Array.isArray(roles)) return;
 
-            roleSelect.innerHTML = data
-                .filter(role => role.name.toUpperCase() !== "ADMIN")
-                .map(role =>
-                    `<option value="${role.id}">${role.name}</option>`
-                )
-                .join("");
-        }
-
-    } catch (err) {
-        console.warn("[create-user] roles error:", err);
-    }
+    roleSelect.innerHTML = roles
+        .filter(r => r.name.toUpperCase() !== "ADMIN")
+        .map(r => `<option value="${r.id}">${r.name}</option>`)
+        .join("");
 }
 
-//
 // ======================
 // LOAD USER (EDIT MODE)
 // ======================
-//
 async function loadUser(id) {
+    const res = await api(`/users/${id}`, "GET");
 
-    const { status, data } = await api(`/users/${id}`, 'GET');
+    const user = res.data;
+    if (!user) return;
 
-    if (status === 200 && data) {
+    username.value = user.username;
+    email.value = user.email;
+    phone.value = user.phone || "";
+    address.value = user.address || "";
 
-        username.value = data.username;
-        email.value = data.email;
-        phone.value = data.phone || "";
-        address.value = data.address || "";
-
-        if (isAdmin && data.role_id) {
-            roleSelect.value = data.role_id;
-        }
-
-        title.textContent = "Modifier utilisateur";
+    if (user.role_id) {
+        roleSelect.value = user.role_id;
     }
+
+    title.textContent = "Modifier utilisateur";
 }
 
-//
 // ======================
 // INIT
 // ======================
-//
 loadRoles();
 
 if (userId) {
     loadUser(userId);
-} else {
-    resetForm();
 }
 
-//
 // ======================
-// SUBMIT FORM
+// SUBMIT (CREATE / UPDATE)
 // ======================
-//
 form.addEventListener("submit", async (e) => {
-
     e.preventDefault();
 
     const payload = {
@@ -135,36 +86,65 @@ form.addEventListener("submit", async (e) => {
         address: address.value,
     };
 
-    // ROLE ONLY ADMIN
-    if (isAdmin && roleSelect.value) {
+    if (roleSelect.value) {
         payload.role_id = roleSelect.value;
     }
 
-    // PASSWORD ONLY IF PROVIDED
     if (password.value) {
         payload.password = password.value;
     }
 
-    let res;
+    // ======================
+    // ROUTING LOGIC 
+    // ======================
+    let url;
+    let method;
 
-    // CREATE OR UPDATE
-    if (userId) {
-        res = await api(`/users/${userId}`, "PUT", payload);
-    } else {
-        res = await api("/users", "POST", payload);
+    // ADMIN editing another user
+    if (userId && isAdmin) {
+        url = `/users/${userId}`;
+        method = "PUT";
     }
 
+    // NORMAL USER editing own profile
+    else if (userId && !isAdmin) {
+        url = "/users/me";
+        method = "PUT";
+    }
+
+    // CREATE USER
+    else {
+        url = "/users";
+        method = "POST";
+    }
+
+    const res = await api(url, method, payload);
+
+    // ======================
+    // RESPONSE HANDLING
+    // ======================
     if (res.status === 200 || res.status === 201) {
 
-        alert("Succès ✔");
+    alert("Succès ✔");
 
-        const redirectTo = isAdmin
-            ? "/views/users/all-users.html"
-            : "/views/users/user-profile.html";
+    const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+    const isAdmin = (currentUser.role || "").toUpperCase() === "ADMIN";
 
-        window.location.href = redirectTo;
+    // ======================
+    // REDIRECTION LOGIC FIX
+    // ======================
 
-    } else {
-        alert("Erreur ❌");
+    if (userId && !isAdmin) {
+        // user modifie SON profil
+        window.location.href = "/views/users/user-profile.html";
     }
+
+    else {
+        // admin ou création user
+        window.location.href = "/views/users/all-users.html";
+    }
+}
+   
 });
+
+
