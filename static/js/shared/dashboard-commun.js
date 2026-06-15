@@ -34,6 +34,36 @@ export async function initDashboard() {
         logoutBtn.onclick = logout;
     }
 
+    // ======================
+    // DASHBOARD BUTTON FIX (IMPORTANT)
+    // ======================
+    const dashboardBtn = document.getElementById("dashboard-button");
+
+    if (dashboardBtn) {
+
+        dashboardBtn.onclick = () => {
+
+            const role = (user.role || "").toUpperCase();
+
+            if (role === "ADMIN") {
+                window.location.href =
+                    "/views/dashboard/admin-dashboard.html";
+            } else {
+                window.location.href =
+                    "/views/dashboard/user-dashboard.html";
+            }
+        };
+    }
+
     return user;
 }
+
+
+
+
+
+
+
+
+
 

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicles - M-Motors</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div id="navbar"></div>
+
+<div class="container mt-5">
+
+    <h2>Gestion des véhicules</h2>
+
+    <!-- ACTIONS -->
+    <div class="mb-3 d-flex gap-2">
+
+        <a href="/views/vehicles/create-vehicle.html" class="btn btn-dark">
+            ➕ Ajouter un véhicule
+        </a>
+
+        <a href="/views/dashboard/admin-dashboard.html" class="btn btn-secondary">
+            🏠 Dashboard
+        </a>
+       
+    </div>
+
+    <!-- TABLE VEHICLES -->
+    <table class="table table-bordered table-hover">
+
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Marque</th>
+                <th>Modèle</th>
+                <th>Année</th>
+                <th>Prix/jour</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody id="vehicles-table-body">
+            <!-- JS injecte ici -->
+        </tbody>
+
+    </table>
+
+</div>
+
+<!-- FOOTER -->
+<div id="footer"></div>
+
+<!-- SCRIPT -->
+<script type="module" src="/static/js/vehicles/all-vehicles.js"></script>
+
+</body>
+</html>

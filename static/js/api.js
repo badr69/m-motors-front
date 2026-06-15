@@ -13,26 +13,33 @@ function getToken() {
 }
 
 // ======================
-// API FUNCTION
+// API FUNCTION (FIXED)
 // ======================
-export async function api(endpoint, method = "GET", body = null) {
+export async function api(endpoint, method = "GET", body = null, isFormData = false) {
 
     const token = getToken();
 
     const headers = {
-        "Content-Type": "application/json",
         "Accept": "application/json"
     };
 
+    // JWT
     if (token && token !== "null" && token !== "undefined") {
         headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    // ❌ IMPORTANT: only JSON if NOT FormData
+    if (!isFormData) {
+        headers["Content-Type"] = "application/json";
     }
 
     try {
         const res = await fetch(`${API_BASE}${endpoint}`, {
             method,
             headers,
-            body: body ? JSON.stringify(body) : undefined
+            body: body
+                ? (isFormData ? body : JSON.stringify(body))
+                : undefined
         });
 
         let json;
@@ -48,6 +55,7 @@ export async function api(endpoint, method = "GET", body = null) {
             status: res.status,
             data: json.data ?? json,
             message: json.message ?? null,
+            error: json.error ?? null,
             raw: json
         };
 
@@ -58,16 +66,18 @@ export async function api(endpoint, method = "GET", body = null) {
             status: 0,
             data: null,
             message: "Network error",
+            error: "NETWORK_ERROR",
             raw: null
         };
     }
 }
 
 // ======================
-// ENDPOINTS (IMPORTANT)
+// ENDPOINTS
 // ======================
 export const ENDPOINTS = {
     LOGIN: "/auth/login",
     REGISTER: "/auth/register",
     CURRENT_USER: "/auth/me"
 };
+
