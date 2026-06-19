@@ -35,7 +35,7 @@ export async function initDashboard() {
     }
 
     // ======================
-    // DASHBOARD BUTTON FIX (IMPORTANT)
+    // DASHBOARD BUTTON 
     // ======================
     const dashboardBtn = document.getElementById("dashboard-button");
 

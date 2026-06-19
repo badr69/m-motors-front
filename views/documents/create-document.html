@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Document - M-Motors</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+
+<body>
+
+<div class="container mt-5" style="max-width: 700px;">
+
+    <h2 id="form-title">Ajouter des documents</h2>
+     <!-- ACTIONS -->
+    <div class="mb-3 d-flex gap-2">
+
+        <a href="/views/dashboard/user-dashboard.html" class="btn btn-secondary">
+            🏠 Dashboard
+        </a>
+
+    </div>
+
+    <!-- FORM -->
+    <form id="dossier-form">
+
+        <!-- DOSSIER SELECT -->
+        <label class="form-label">Choisir un dossier</label>
+        <select id="dossier_id" class="form-control mb-3" required>
+            <option value="">-- Sélectionner un dossier --</option>
+        </select>
+
+        <!-- TYPE DOCUMENT -->
+        <input type="text"
+            id="type_document"
+            class="form-control mb-3"
+            placeholder="Type de document (optionnel)">
+
+        <!-- FILE UPLOAD SIMPLE -->
+        <label class="form-label">Document</label>
+        <input type="file"
+            id="file"
+            class="form-control mb-3"
+            required>
+
+        <!-- SUBMIT -->
+        <button type="submit" class="btn btn-dark w-100">
+            Upload documents
+        </button>
+
+    </form>
+
+    <hr>
+
+    <!-- LIST -->
+    <h4>Documents uploadés</h4>
+    <ul id="documents-list" class="list-group"></ul>
+
+</div>
+
+<!-- JS -->
+<script type="module" src="/static/js/documents/create-document.js"></script>
+
+</body>
+
+</html>

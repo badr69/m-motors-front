@@ -51,7 +51,7 @@ async function loadDossiers() {
 
     const res = await api("/rental_dossiers/admin", "GET");
 
-    console.log("📦 RESPONSE:", res);
+    console.log("RESPONSE:", res);
 
     const dossiers = res.data;
 

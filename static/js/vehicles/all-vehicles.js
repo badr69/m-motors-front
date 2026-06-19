@@ -92,7 +92,7 @@ window.deleteVehicle = async function (id) {
 
     } else {
 
-        alert(res.message || "Erreur suppression ❌");
+        alert(res.message || "Erreur suppression ");
     }
 };
 

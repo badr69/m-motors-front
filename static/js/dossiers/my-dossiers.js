@@ -59,6 +59,20 @@ async function loadMyDossiers() {
 
             <td>${new Date(d.created_at).toLocaleDateString()}</td>
 
+            <td>
+
+            <a href="/views/documents/create-document.html?dossier_id=${d.id}"
+               class="btn btn-success btn-sm">
+                Ajouter document
+            </a>
+
+            <a href="/views/dossiers/dossier-details.html?id=${d.id}"
+               class="btn btn-primary btn-sm">
+                Voir documents
+            </a>
+
+        </td>
+
         </tr>
     `).join("");
 }
