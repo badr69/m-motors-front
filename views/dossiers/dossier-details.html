@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dossier Details - M-Motors</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+
+<body>
+
+<div class="container mt-5">
+
+    <h2>Détails du dossier</h2>
+
+    <div class="mb-3">
+        <a href="/views/dossiers/my-dossiers.html"
+           class="btn btn-secondary">
+            Retour
+        </a>
+
+        <a id="upload-btn"
+           class="btn btn-success">
+            Ajouter document
+        </a>
+    </div>
+
+    <div class="card mb-4">
+
+        <div class="card-header">
+            Informations du dossier
+        </div>
+
+        <div class="card-body" id="dossier-info">
+            Chargement...
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <div class="card-header">
+            Documents du dossier
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-bordered">
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Type</th>
+                        <th>Nom fichier</th>
+                    </tr>
+                </thead>
+
+                <tbody id="documents-table-body">
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script type="module" src="/static/js/dossiers/dossier-details.js"></script>
+
+</body>
+</html>

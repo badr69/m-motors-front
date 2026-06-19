@@ -95,11 +95,11 @@ window.deleteRole = async function(id) {
             alert("Rôle supprimé ✔");
             initRolesList();
         } else {
-            alert("Erreur suppression ❌");
+            alert("Erreur suppression ");
         }
     } catch (err) {
         console.error(err);
-        alert("Erreur serveur ❌");
+        alert("Erreur serveur ");
     }
 };
 

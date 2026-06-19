@@ -13,7 +13,7 @@ function getToken() {
 }
 
 // ======================
-// API FUNCTION (FIXED)
+// API FUNCTION 
 // ======================
 export async function api(endpoint, method = "GET", body = null, isFormData = false) {
 
@@ -28,7 +28,7 @@ export async function api(endpoint, method = "GET", body = null, isFormData = fa
         headers["Authorization"] = `Bearer ${token}`;
     }
 
-    // ❌ IMPORTANT: only JSON if NOT FormData
+    // IMPORTANT: only JSON if NOT FormData
     if (!isFormData) {
         headers["Content-Type"] = "application/json";
     }

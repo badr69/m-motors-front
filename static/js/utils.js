@@ -42,7 +42,7 @@ export function handleSubmitButton(formSelector, submitSelector) {
 }
 
 // ======================
-// LIVE FEEDBACK (IMPORTANT FIX)
+// LIVE FEEDBACK 
 // ======================
 export function handleLiveFeedback(formSelector, feedbackSelector) {
   const form = document.querySelector(formSelector);

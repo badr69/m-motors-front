@@ -1,4 +1,4 @@
-console.log("🔥 CREATE/UPDATE VEHICLE JS LOADED");
+console.log("CREATE/UPDATE VEHICLE JS LOADED");
 
 import { api } from "../api.js";
 
