@@ -47,7 +47,7 @@ async function loadDossiers() {
 }
 
 // ======================
-// VALIDATION SIMPLE
+// VALIDATION 
 // ======================
 function validate() {
 

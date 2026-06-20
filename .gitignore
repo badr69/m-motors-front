@@ -4,18 +4,30 @@
 
 # System
 .DS_Store
+# Fichiers de logs
+*.log
+
+# Fichiers temporaires système
+.DS_Store
 Thumbs.db
 
-# IDE
+# IDE / éditeurs
 .idea/
 .vscode/
 
-# Node 
+# Node modules
 node_modules/
+
+# Build
 dist/
 build/
 
-# Cypress 
+# Cypress
 cypress/videos/
 cypress/screenshots/
 
+# Cypress env (local only)
+cypress.env.json
+
+# Fichiers de configuration locaux
+#.env
