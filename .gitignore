@@ -16,3 +16,6 @@ build/
 
 # Fichiers de configuration locaux
 #.env
+
+# Cypress env
+cypress.env.json
