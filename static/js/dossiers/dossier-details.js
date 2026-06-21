@@ -69,6 +69,8 @@ async function loadDossier() {
     // ======================
     // DOSSIER INFO
     // ======================
+    alert(imageUrl);
+    console.log("IMAGE URL =", imageUrl);
     infoBox.innerHTML = `
 
         <div class="mb-3 text-center">
