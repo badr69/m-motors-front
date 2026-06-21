@@ -1,6 +1,6 @@
 console.log("DOSSIER DETAILS JS LOADED");
 
-import { api } from "../api.js";
+import { api, FILE_BASE } from "../api.js";
 
 // ======================
 // DOSSIER ID
@@ -62,14 +62,17 @@ async function loadDossier() {
     // ======================
     // IMAGE VEHICULE 
     // ======================
+    // const imageUrl = dossier.vehicle?.image_url
+    // ? `http://127.0.0.1:5001${dossier.vehicle.image_url}`
+    // : null;
+
     const imageUrl = dossier.vehicle?.image_url
-    ? `http://127.0.0.1:5001${dossier.vehicle.image_url}`
+    ? `${FILE_BASE}${dossier.vehicle.image_url}`
     : null;
 
     // ======================
     // DOSSIER INFO
     // ======================
-    alert(imageUrl);
     console.log("IMAGE URL =", imageUrl);
     infoBox.innerHTML = `
 
