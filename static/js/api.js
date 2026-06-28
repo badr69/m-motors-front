@@ -6,7 +6,7 @@ const isLocal =
 
 const API_BASE = isLocal
     ? "http://127.0.0.1:5001/api/v1"
-    : "http://84.46.241.76/api/v1";
+    : "http://84.46.241.76:5001/api/v1";
 
 const FILE_BASE = isLocal
     ? "http://127.0.0.1:5001"
