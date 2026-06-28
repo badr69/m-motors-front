@@ -61,7 +61,7 @@ async function loadDossier() {
         ? `${FILE_BASE}${dossier.vehicle.image_url}`
         : null;
 
-    console.log("IMAGE URL =", imageUrl);
+    // console.log("IMAGE URL =", imageUrl);
 
     // ======================
     // DOSSIER INFO
